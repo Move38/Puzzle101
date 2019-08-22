@@ -15,7 +15,7 @@
    --------------------
 */
 
-#include "Serial.h"
+//#include "Serial.h"
 
 ////COMMUNICATION VARIABLES////
 enum gameModes {SETUPAUTO, PACKETREADY, PACKETSENDING, PACKETLISTENING, PACKETRECEIVED, GAMEAUTO};
@@ -52,11 +52,11 @@ Timer syncTimer;
 byte neighborState[6];
 byte syncVal = 0;
 
-ServicePortSerial sp;
+//ServicePortSerial sp;
 
 void setup() {
   randomize();
-  sp.begin();
+//  sp.begin();
 }
 
 void loop() {
@@ -386,20 +386,20 @@ void makePuzzle() {
   colorConnections();
 
   // print out the puzzle here:
-  FOREACH_FACE(piece) {
-    sp.print(piece);
-    sp.print(F(" - "));
-    FOREACH_FACE(face) {
-      switch (colorsArr[piece][face]) {
-        case 0: sp.print(F("---, ")); break;
-        case 1: sp.print(F("RED, ")); break;
-        case 2: sp.print(F("YEL, ")); break;
-        case 3: sp.print(F("BLU, ")); break;
-      }
-    }
-    sp.println("");
-  }
-  sp.println("");
+//  FOREACH_FACE(piece) {
+//    sp.print(piece);
+//    sp.print(F(" - "));
+//    FOREACH_FACE(face) {
+//      switch (colorsArr[piece][face]) {
+//        case 0: sp.print(F("---, ")); break;
+//        case 1: sp.print(F("RED, ")); break;
+//        case 2: sp.print(F("YEL, ")); break;
+//        case 3: sp.print(F("BLU, ")); break;
+//      }
+//    }
+//    sp.println("");
+//  }
+//  sp.println("");
 }
 
 void resetAll() {
