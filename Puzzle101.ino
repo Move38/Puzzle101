@@ -1,19 +1,21 @@
 /*
-    Puzzle101
-    by Move38, Inc. 2019
-    Lead development by Dan King
-    original game by Vanilla Liu, Dan King
+   Puzzle101
+   by Move38, Inc. 2019
+   Lead development by Dan King
+   original game by Vanilla Liu, Dan King
 
-    Rules: https://github.com/Move38/Puzzle101/blob/master/README.md
+   Rules: https://github.com/Move38/Puzzle101/blob/master/README.md
 
-    --------------------
-    Blinks by Move38
-    Brought to life via Kickstarter 2018
+   --------------------
+   Blinks by Move38
+   Brought to life via Kickstarter 2018
 
-    @madewithblinks
-    www.move38.com
-    --------------------
+   @madewithblinks
+   www.move38.com
+   --------------------
 */
+
+#include "Serial.h"
 
 ////COMMUNICATION VARIABLES////
 enum gameModes {SETUPAUTO, PACKETREADY, PACKETSENDING, PACKETLISTENING, PACKETRECEIVED, GAMEAUTO};
@@ -50,8 +52,11 @@ Timer syncTimer;
 byte neighborState[6];
 byte syncVal = 0;
 
+ServicePortSerial sp;
+
 void setup() {
   randomize();
+  sp.begin();
 }
 
 void loop() {
@@ -379,6 +384,22 @@ void makePuzzle() {
     addBlink(1, lastRingBlinkIndex);
   }
   colorConnections();
+
+  // print out the puzzle here:
+  FOREACH_FACE(piece) {
+    sp.print(piece);
+    sp.print(F(" - "));
+    FOREACH_FACE(face) {
+      switch (colorsArr[piece][face]) {
+        case 0: sp.print(F("---, ")); break;
+        case 1: sp.print(F("RED, ")); break;
+        case 2: sp.print(F("YEL, ")); break;
+        case 3: sp.print(F("BLU, ")); break;
+      }
+    }
+    sp.println("");
+  }
+  sp.println("");
 }
 
 void resetAll() {
@@ -502,12 +523,12 @@ byte getCurrentPiece () {
 }
 
 /*
- * Keep ourselves on the same time loop as our neighbors
- * if a neighbor passed go, 
- * we want to pass go as well 
- * (if we didn't just pass go)
- * ... or collect $200
- */
+   Keep ourselves on the same time loop as our neighbors
+   if a neighbor passed go,
+   we want to pass go as well
+   (if we didn't just pass go)
+   ... or collect $200
+*/
 void syncLoop() {
 
   bool didNeighborChange = false;
